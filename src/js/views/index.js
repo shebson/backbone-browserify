@@ -1,11 +1,10 @@
-var Backbone = require('backbone'),
-    template = require('../templates/index.hbs'),
-    $ = require('jquery');
+var BaseView = require('./base'),
+    template = require('../templates/index.hbs');
 
-module.exports = Backbone.View.extend({
-    el: '#content',
+module.exports = BaseView.extend({
+    container: '#content',
     render: function () {
         "use strict";
-        this.$el.html(template());
+        this.renderContent(template());
     }
 });
