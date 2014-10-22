@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "Boilerplate for Backbone.js + Browserify + Handlebars + Grunt",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/shebson/backbone-browserify.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

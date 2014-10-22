@@ -6,6 +6,7 @@ var Router = Backbone.Router.extend({
         "*actions" : "index"
     },
     index: function () {
+        "use strict";
         var indexView = new Index();
         indexView.render();
     }

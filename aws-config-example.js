@@ -17,4 +17,4 @@ module.exports = {
     buckets: {
         production: "MY-BUCKET"
     }
-}
+};
