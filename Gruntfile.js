@@ -1,4 +1,5 @@
-var hbsfy = require('hbsfy');
+var hbsfy = require('hbsfy'),
+    awsConfig = require('./aws-config');
 
 module.exports = function (grunt) {
     "use strict";
@@ -56,7 +57,7 @@ module.exports = function (grunt) {
             }
         },
         less: {
-            development: {
+            dev: {
                 files: {
                     'build/dev/main.css': "src/less/main.less"
                 }
@@ -88,7 +89,10 @@ module.exports = function (grunt) {
                 }
             }
         },
-        clean: [ 'build'],
+        clean: {
+            dev: ['build/dev'],
+            deploy: ['build/deploy']
+        },
         uglify: {
             options: {
                 compress: {
@@ -100,6 +104,35 @@ module.exports = function (grunt) {
                     'build/deploy/app.js': ['build/deploy/app.js']
                 }
             }
+        },
+        aws_s3: {
+            options: {
+                accessKeyId: awsConfig.credentials.access,
+                secretAccessKey: awsConfig.credentials.secret,
+                region: awsConfig.region,
+                uploadConcurrency: 5,
+                downloadConcurrency: 5
+            },
+            production: {
+                options: {
+                    bucket: awsConfig.buckets.production,
+                    differential: true // Only uploads changed files
+                },
+                files: [
+                    {expand: true, cwd: 'build/deploy/', src: ['**'], dest: ''}
+                    // Note: If you set up cache busting, you will want to set long-expiring cache-headers for
+                    //       everything except index.html here
+                ]
+            },
+            clean_production: {
+                options: {
+                    bucket: awsConfig.buckets.production,
+                    differential: true
+                },
+                files: [
+                    {dest: '/', 'action': 'delete', cwd: "build/deploy/", src: ['**']}
+                ]
+            }
         }
     });
 
@@ -110,7 +143,14 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.registerTask('compile', ['clean', 'copy', 'browserify', 'less', 'uglify']);
-    grunt.registerTask('server', ['compile', 'connect:all', 'watch']);
+    grunt.loadNpmTasks('grunt-aws-s3');
+
+    grunt.registerTask('compile-dev',  ['clean:dev', 'copy:dev', 'browserify:dev', 'less:dev']);
+    grunt.registerTask('compile-deploy',  ['clean:deploy', 'copy:deploy', 'browserify:deploy', 'less:deploy', 'uglify']);
+
+    grunt.registerTask('compile', ['compile-dev', 'compile-deploy']);
+    grunt.registerTask('server', ['compile-dev', 'connect:all', 'watch']);
+    grunt.registerTask('deploy', ['compile-deploy', 'aws_s3:production', 'aws_s3:clean_production']);
+
     grunt.registerTask('default', ['compile']);
 };
