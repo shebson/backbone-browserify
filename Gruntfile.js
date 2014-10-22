@@ -5,7 +5,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         browserify: {
-            app: {
+            dev: {
                 options: {
                     transform: [hbsfy],
                     browserifyOptions: {
@@ -13,21 +13,60 @@ module.exports = function (grunt) {
                     }
                 },
                 files: {
-                    "build/app.js": ['src/js/app.js']
-
+                    "build/dev/app.js": ['src/js/app.js']
+                }
+            },
+            deploy: {
+                options: {
+                    transform: [hbsfy]
+                },
+                files: {
+                    "build/deploy/app.js": ['src/js/app.js']
                 }
             }
         },
         copy: {
-            main: {
-                src: 'src/index.html',
-                dest: 'build/index.html'
+            dev: {
+                files: [
+                    {
+                        src: 'src/index.html',
+                        dest: 'build/dev/index.html'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'src/public/',
+                        src: ['**'],
+                        dest: 'build/dev/'
+                    }
+                ]
+            },
+            deploy:  {
+                files: [
+                    {
+                        src: 'src/index.html',
+                        dest: 'build/deploy/index.html'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'src/public/',
+                        src: ['**'],
+                        dest: 'build/deploy/'
+                    }
+                ]
             }
         },
         less: {
             development: {
                 files: {
-                    'build/main.css': "src/less/main.less"
+                    'build/dev/main.css': "src/less/main.less"
+                }
+            },
+            deploy: {
+                options: {
+                    cleancss: true
+                },
+                files: {
+                    'build/deploy/main.css': "src/less/main.less"
                 }
             }
         },
@@ -35,7 +74,7 @@ module.exports = function (grunt) {
             all: {
                 options: {
                     port: 7070,
-                    base: ['build'],
+                    base: ['build/dev'],
                     livereload: true
                 }
             }
@@ -48,15 +87,30 @@ module.exports = function (grunt) {
                     livereload: true
                 }
             }
+        },
+        clean: [ 'build'],
+        uglify: {
+            options: {
+                compress: {
+                    drop_console: true
+                }
+            },
+            prod: {
+                files: {
+                    'build/deploy/app.js': ['build/deploy/app.js']
+                }
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-browserify');
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-less');
-    grunt.registerTask('compile', ['copy', 'browserify', 'less:development']);
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.registerTask('compile', ['clean', 'copy', 'browserify', 'less', 'uglify']);
     grunt.registerTask('server', ['compile', 'connect:all', 'watch']);
     grunt.registerTask('default', ['compile']);
 };
