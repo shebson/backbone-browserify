@@ -1,3 +1,6 @@
+[![Circle CI](https://circleci.com/gh/shebson/backbone-browserify.png?style=shield)](https://circleci.com/gh/shebson/backbone-browserify)
+[![Dependency Status](https://david-dm.org/shebson/backbone-browserify.png)](https://david-dm.org/shebson/backbone-browserify)
+
 Backbone + Browserify Webapp Template
 =================================================
 
