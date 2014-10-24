@@ -8,7 +8,7 @@
     "url": "git://github.com/shebson/backbone-browserify.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/testem ci"
   },
   "author": "Stephen Hebson",
   "license": "MIT",
@@ -27,6 +27,10 @@
     "hbsfy": "~2.2.0",
     "grunt-contrib-uglify": "~0.6.0",
     "grunt-aws-s3": "~0.9.4",
-    "grunt-contrib-clean": "~0.6.0"
+    "grunt-contrib-clean": "~0.6.0",
+    "grunt-jslint": "~1.1.12",
+    "testem": "~0.6.22",
+    "mocha": "~2.0.1",
+    "chai": "~1.9.2"
   }
 }

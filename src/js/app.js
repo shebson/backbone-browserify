@@ -1,5 +1,3 @@
-/*global document */
-
 var Router = require('./router'),
     Backbone = require('backbone'),
     $ = require('jquery');
