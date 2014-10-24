@@ -60,21 +60,24 @@ Testing and Linting
 ----------------------
 This boilerplate includes linting via Grunt-JSLint and testing using mocha and testem. Run `npm test` to run all tests
 provided in the `test` directory using PhantomJS and to JSLint the application code (including all tests and
-configuration).
+configuration). This works with many CI services, including CircleCI, without any additional configuration.
 
 Additionally, you may opt to install Testem globally by running `npm install testem -g`. Doing so makes it easy to run
-Testem in TDD mode by simply running `testem` in the project directory.
+Testem in TDD mode by running `testem` in the project directory.
 
 
-Deploying to Production
-------------------------
+Deploying to Production and Staging
+--------------------------------------
 
-You have a great deal of flexibility about how to serve your app in production. With no additional configuration, you
-can run `grunt compile-deploy` to generate the `build/deploy` directory. You could then serve the contents of this
+You have a great deal of flexibility about how to serve your app in production. With no additional configuration,
+`grunt compile-deploy` generates the `build/deploy` directory. You could serve the contents of the `build/deploy`
 directory from Nginx or Apache, or upload the files to Amazon S3 or any other static host.
 
-To make life easier, a Grunt task for deploying to Amazon S3 is included automatically if you provide
-`/config/aws-credentials.js`. This file is gitignored because you should not include credentials in a public
-repo, but an example is included in `/config/aws-credentials-example.js`. If you create `/config/aws-credentials.js`,
-you can deploy to the specified S3 bucket by running `grunt deploy`.
+To make life easier, Grunt tasks for deploying to Amazon S3 are optionally included if you provide
+`config/aws-credentials.js`. This file is gitignored because credentials should not be included in a public
+repo, but an example is included in `config/aws-credentials-example.js`.
 
+If you elect to provide `config/aws-credentials.js`, the `credentials` object and a `region` are mandatory properties.
+Optionally, you may also include `buckets.production` and/or `buckets.staging`. Providing `buckets.production` enables
+automated deployment to production via `grunt deploy`, and providing `buckets.staging` does the same for your staging
+environment via `grunt stage`.
