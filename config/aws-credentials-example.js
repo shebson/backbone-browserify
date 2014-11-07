@@ -19,6 +19,6 @@ module.exports = {
     region: 'us-west-1',
     buckets: {
         production: "MY-BUCKET",  // Optional: enables `grunt deploy`
-        stage: "MY-BUCKET"        // Optional: enables `grunt stage`
+        staging: "MY-BUCKET"        // Optional: enables `grunt stage`
     }
 };

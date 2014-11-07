@@ -24,10 +24,10 @@ module.exports = function (grunt) {
     if (initConfig.aws_s3) {
         grunt.loadNpmTasks('grunt-aws-s3');
         if (initConfig.aws_s3.production) {
-            grunt.registerTask('deploy', ['compile-deploy', 'aws_s3:production', 'aws_s3:clean_production']);
+            grunt.registerTask('deploy', ['compile-deploy', 'aws_s3:production', 'aws_s3:production_cleaner']);
         }
         if (initConfig.aws_s3.stage) {
-            grunt.registerTask('stage', ['compile-deploy', 'aws_s3:staging', 'aws_s3:clean_staging']);
+            grunt.registerTask('stage', ['compile-deploy', 'aws_s3:staging', 'aws_s3:staging_cleaner']);
         }
     }
 };
